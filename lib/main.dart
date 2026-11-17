@@ -21,6 +21,16 @@ final List<Map<String, String>> mahasiswa = [
 ];
 int nextId = 3;
 
+// TAHAP 6: Filter hanya memengaruhi tampilan, bukan List asli.
+String keyword = '';
+List<Map<String, String>> get dataTampil {
+  final q = keyword.trim().toLowerCase();
+  return mahasiswa.where((m) =>
+    m['nama']!.toLowerCase().contains(q) ||
+    m['nim']!.toLowerCase().contains(q)
+  ).toList();
+}
+
 // TAHAP 3: CREATE. Form mengembalikan data baru.
 Future<void> tambahData() async {
   final hasil = await showDialog<Map<String, String>>(
@@ -83,18 +93,29 @@ Column(children: [
 
 Padding(
   padding: const EdgeInsets.all(12),
+  child: TextField(
+    decoration: const InputDecoration(
+      labelText: 'Cari nama atau NIM',
+      border: OutlineInputBorder(),
+    ),
+    onChanged: (v) => setState(() => keyword = v),
+  ),
+),
+
+Padding(
+  padding: const EdgeInsets.all(12),
   child: Text('Data tersimpan: ${mahasiswa.length}'),
 ),
 Expanded(
   child: ListView.builder(
     itemCount: 
 
-mahasiswa.length,
+dataTampil.length,
 
 itemBuilder: (context, index) {
   final item = 
 
-mahasiswa[index];
+dataTampil[index];
 
 return Card(
   child: ListTile(
