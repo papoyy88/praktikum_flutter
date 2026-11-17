@@ -50,6 +50,29 @@ Future<void> ubahData(Map<String, String> dipilih) async {
   });
 }
 
+// TAHAP 5: DELETE dengan dialog konfirmasi.
+Future<void> hapusData(Map<String, String> dipilih) async {
+  final setuju = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Hapus data?'),
+      content: Text('Hapus ${dipilih['nama']}?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: const Text('Batal'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: const Text('Hapus'),
+        ),
+      ],
+    ),
+  );
+  if (!mounted || setuju != true) return;
+  setState(() => mahasiswa.removeWhere((m) => m['id'] == dipilih['id']));
+}
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -86,6 +109,12 @@ IconButton(
   tooltip: 'Ubah',
   icon: const Icon(Icons.edit),
   onPressed: () => ubahData(item),
+),
+
+IconButton(
+  tooltip: 'Hapus',
+  icon: const Icon(Icons.delete),
+  onPressed: () => hapusData(item),
 ),
 
   ],
