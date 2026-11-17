@@ -18,18 +18,44 @@ class _MahasiswaPageState extends State<MahasiswaPage> {
 final List<Map<String, String>> mahasiswa = [
   {'id': '1', 'nim': '2026001', 'nama': 'Andi', 'prodi': 'Informatika'},
   {'id': '2', 'nim': '2026002', 'nama': 'Siti', 'prodi': 'Informatika'},
+  {'id': '3', 'nim': '2026003', 'nama': 'Ridho', 'prodi': 'Informatika'},
 ];
-int nextId = 3;
+int nextId = 4;
 
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(title: const Text('Praktikum 7: Data Mahasiswa')),
+    appBar: AppBar(title: const Text('INFORMATIKA 24')),
     body: 
 
-Center(child: Text(
-  'Tahap 1: jumlah data awal = ${mahasiswa.length}',
-)),
+Column(children: [
+
+Padding(
+  padding: const EdgeInsets.all(12),
+  child: Text('Data tersimpan: ${mahasiswa.length}'),
+),
+Expanded(
+  child: ListView.builder(
+    itemCount: 
+
+mahasiswa.length,
+
+itemBuilder: (context, index) {
+  final item = 
+
+mahasiswa[index];
+
+return Card(
+  child: ListTile(
+    title: Text(item['nama']!),
+    subtitle: Text('${item['prodi']} | ${item['nim']}'),
+
+          ),
+        );
+      },
+    ),
+  ),
+]),
 
     );
   }
