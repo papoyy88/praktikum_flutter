@@ -33,6 +33,23 @@ Future<void> tambahData() async {
   });
 }
 
+// TAHAP 4: UPDATE berdasarkan id, BUKAN indeks ListView.
+Future<void> ubahData(Map<String, String> dipilih) async {
+  final hasil = await showDialog<Map<String, String>>(
+    context: context,
+    builder: (_) => MahasiswaForm(
+      dataAwal: dipilih,
+      dataSudahAda: mahasiswa,
+    ),
+  );
+  if (!mounted || hasil == null) return;
+  final index = mahasiswa.indexWhere((m) => m['id'] == dipilih['id']);
+  if (index < 0) return;
+  setState(() {
+    mahasiswa[index] = {'id': dipilih['id']!, ...hasil};
+  });
+}
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -60,6 +77,19 @@ return Card(
   child: ListTile(
     title: Text(item['nama']!),
     subtitle: Text('${item['nim']} | ${item['prodi']}'),
+
+trailing: Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+
+IconButton(
+  tooltip: 'Ubah',
+  icon: const Icon(Icons.edit),
+  onPressed: () => ubahData(item),
+),
+
+  ],
+),
 
           ),
         );
@@ -123,8 +153,7 @@ class _MahasiswaFormState extends State<MahasiswaForm> {
             children: [
               TextFormField(
                 controller: nim,
-                decoration: const InputDecoration(labelText: 'NIM Mahasiswa',
-  hintText: 'Contoh: 2026003',),
+                decoration: const InputDecoration(labelText: 'NIM'),
                 validator: (value) {
                   final v = value?.trim() ?? '';
                   if (v.isEmpty) return 'NIM wajib diisi';
@@ -136,15 +165,13 @@ class _MahasiswaFormState extends State<MahasiswaForm> {
               ),
               TextFormField(
                 controller: nama,
-                decoration: const InputDecoration(labelText: 'Nama Lengkap Mahasiswa',
-  hintText: 'Masukkan nama lengkap'),
+                decoration: const InputDecoration(labelText: 'Nama'),
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? 'Nama wajib diisi' : null,
               ),
               TextFormField(
                 controller: prodi,
-                decoration: const InputDecoration(labelText: 'Program Studi',
-  hintText: 'Contoh: Informatika'),
+                decoration: const InputDecoration(labelText: 'Prodi'),
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? 'Prodi wajib diisi' : null,
               ),
